@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Datastar Inspector - GitHub CDN</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background: #f5f5f5;
+        }
+        h1 {
+            color: #333;
+            border-bottom: 3px solid #007acc;
+            padding-bottom: 10px;
+        }
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        code {
+            background: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Cascadia Code', 'Courier New', monospace;
+        }
+        pre {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        .cdn-url {
+            background: #e8f4f8;
+            border-left: 4px solid #007acc;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        .btn {
+            display: inline-block;
+            background: #007acc;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 5px;
+        }
+        .btn:hover {
+            background: #005a9e;
+        }
+    </style>
+</head>
+<body>
+    <h1>📊 Datastar Inspector</h1>
+    
+    <div class="card">
+        <h2>About</h2>
+        <p>A development tool for monitoring and debugging Datastar signals in real-time.</p>
+        <p><strong>Version:</strong> 1.0.0 | <strong>Size:</strong> 25KB (minified)</p>
+    </div>
+
+    <div class="card">
+        <h2>🚀 Quick Start - CDN Links</h2>
+        
+        <h3>Production (Minified)</h3>
+        <div class="cdn-url">
+            <code id="cdn-min">https://YOUR_USERNAME.github.io/datastar-inspector/datastar-inspector.min.js</code>
+        </div>
+        
+        <h3>Development (Full)</h3>
+        <div class="cdn-url">
+            <code id="cdn-full">https://YOUR_USERNAME.github.io/datastar-inspector/datastar-inspector.js</code>
+        </div>
+
+        <h3>Via jsDelivr (Recommended)</h3>
+        <div class="cdn-url">
+            <code id="cdn-jsdelivr">https://cdn.jsdelivr.net/gh/YOUR_USERNAME/datastar-inspector@v1.0.0/datastar-inspector.min.js</code>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>📝 Usage Example</h2>
+        <pre><code>&lt;!-- Load Datastar --&gt;
+&lt;script type="module"&gt;
+    import { load, apply } from 'https://cdn.jsdelivr.net/npm/@sudodevnull/datastar';
+    window.Datastar = { load, apply };
+    apply();
+&lt;/script&gt;
+
+&lt;!-- Load Inspector from CDN --&gt;
+&lt;script src="https://cdn.jsdelivr.net/gh/YOUR_USERNAME/datastar-inspector@v1.0.0/datastar-inspector.min.js"&gt;&lt;/script&gt;
+
+&lt;!-- Initialize --&gt;
+&lt;script&gt;
+    DatastarInspector.init();
+&lt;/script&gt;</code></pre>
+    </div>
+
+    <div class="card">
+        <h2>🔗 Links</h2>
+        <a href="datastar-inspector.js" class="btn">Download Full Version</a>
+        <a href="datastar-inspector.min.js" class="btn">Download Minified</a>
+        <a href="https://github.com/YOUR_USERNAME/datastar-inspector" class="btn">View on GitHub</a>
+    </div>
+
+    <div class="card">
+        <h2>⌨️ Keyboard Shortcut</h2>
+        <p>Press <code>Alt+Shift+D</code> to toggle the inspector</p>
+    </div>
+
+    <script>
+        // Update URLs with actual GitHub username if available
+        const username = window.location.hostname.split('.')[0];
+        if (username && username !== 'your_username') {
+            document.getElementById('cdn-min').textContent = 
+                `https://${username}.github.io/datastar-inspector/datastar-inspector.min.js`;
+            document.getElementById('cdn-full').textContent = 
+                `https://${username}.github.io/datastar-inspector/datastar-inspector.js`;
+            document.getElementById('cdn-jsdelivr').textContent = 
+                `https://cdn.jsdelivr.net/gh/${username}/datastar-inspector@v1.0.0/datastar-inspector.min.js`;
+        }
+    </script>
+</body>
+</html>

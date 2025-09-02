@@ -1,0 +1,44 @@
+{
+  "name": "datastar-inspector",
+  "version": "1.0.0",
+  "description": "A development tool for monitoring and debugging Datastar signals in real-time",
+  "main": "datastar-inspector.js",
+  "browser": "datastar-inspector.min.js",
+  "unpkg": "datastar-inspector.min.js",
+  "jsdelivr": "datastar-inspector.min.js",
+  "files": [
+    "datastar-inspector.js",
+    "datastar-inspector.min.js",
+    "README.md",
+    "package.json"
+  ],
+  "scripts": {
+    "build": "terser datastar-inspector.js -c -m --comments false -o datastar-inspector.min.js",
+    "prepublishOnly": "npm run build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "datastar",
+    "debugging",
+    "inspector",
+    "devtools",
+    "signals",
+    "reactive",
+    "development",
+    "cdn",
+    "browser"
+  ],
+  "author": "kahgeh",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kahgeh/datastar-inspector.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kahgeh/datastar-inspector/issues"
+  },
+  "homepage": "https://github.com/kahgeh/datastar-inspector#readme",
+  "devDependencies": {
+    "terser": "^5.43.1"
+  }
+}

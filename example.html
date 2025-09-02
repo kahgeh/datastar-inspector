@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Datastar Inspector Example</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        
+        .section {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        h2 {
+            color: #666;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        
+        button {
+            background: #007acc;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        
+        button:hover {
+            background: #005a9e;
+        }
+        
+        input, select {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .output {
+            background: #f8f8f8;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .todo-item {
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            background: #f8f8f8;
+            margin-bottom: 5px;
+            border-radius: 4px;
+        }
+        
+        .todo-item input[type="checkbox"] {
+            margin-right: 10px;
+        }
+        
+        .instructions {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .instructions h3 {
+            margin-top: 0;
+            color: #1976d2;
+        }
+        
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="instructions">
+        <h3>📊 Datastar Inspector is Active!</h3>
+        <p>Press <code>Alt+Shift+D</code> to toggle the inspector panel</p>
+        <p>The inspector will appear on the right side of your screen showing all signals and their real-time changes.</p>
+    </div>
+
+    <h1>Datastar Demo with Inspector</h1>
+    
+    <div class="section">
+        <h2>Counter Example</h2>
+        <div data-signals="{count: 0, step: 1}">
+            <button data-on-click="$count = $count + $step">Increment</button>
+            <button data-on-click="$count = $count - $step">Decrement</button>
+            <button data-on-click="$count = 0">Reset</button>
+            <input type="number" data-bind="$step" placeholder="Step">
+            <div class="output">
+                Count: <span data-text="$count"></span> (Step: <span data-text="$step"></span>)
+            </div>
+        </div>
+    </div>
+    
+    <div class="section">
+        <h2>User Profile</h2>
+        <div data-signals="{user: {name: '', email: '', age: 25, premium: false}}">
+            <input placeholder="Name" data-bind="$user.name">
+            <input placeholder="Email" data-bind="$user.email" type="email">
+            <input type="number" placeholder="Age" data-bind="$user.age">
+            <label>
+                <input type="checkbox" data-bind="$user.premium">
+                Premium Member
+            </label>
+            <div class="output">
+                <div>Name: <span data-text="$user.name || 'Not set'"></span></div>
+                <div>Email: <span data-text="$user.email || 'Not set'"></span></div>
+                <div>Age: <span data-text="$user.age"></span></div>
+                <div>Status: <span data-text="$user.premium ? 'Premium' : 'Free'"></span></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="section">
+        <h2>Dynamic Todo List</h2>
+        <div data-signals="{todos: [], newTodo: '', filter: 'all'}">
+            <div>
+                <input placeholder="New todo..." data-bind="$newTodo" 
+                       data-on-keydown.enter="if($newTodo.trim()) { $todos.push({id: Date.now(), text: $newTodo, done: false}); $newTodo = '' }">
+                <button data-on-click="if($newTodo.trim()) { $todos.push({id: Date.now(), text: $newTodo, done: false}); $newTodo = '' }">
+                    Add Todo
+                </button>
+                <button data-on-click="$todos = $todos.filter(t => !t.done)">Clear Completed</button>
+                <button data-on-click="$todos = []">Clear All</button>
+            </div>
+            
+            <div style="margin: 10px 0;">
+                <label>
+                    <input type="radio" name="filter" data-on-click="$filter = 'all'" checked>
+                    All (<span data-text="$todos.length"></span>)
+                </label>
+                <label>
+                    <input type="radio" name="filter" data-on-click="$filter = 'active'">
+                    Active (<span data-text="$todos.filter(t => !t.done).length"></span>)
+                </label>
+                <label>
+                    <input type="radio" name="filter" data-on-click="$filter = 'completed'">
+                    Completed (<span data-text="$todos.filter(t => t.done).length"></span>)
+                </label>
+            </div>
+            
+            <div class="output">
+                <div data-text="`Showing ${$filter} todos`"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="section">
+        <h2>Computed Values</h2>
+        <div data-signals="{price: 100, quantity: 1, taxRate: 0.08}">
+            <div data-computed="{
+                subtotal: $price * $quantity,
+                tax: $price * $quantity * $taxRate,
+                total: $price * $quantity * (1 + $taxRate)
+            }">
+                <label>
+                    Price: $<input type="number" data-bind="$price" style="width: 100px;">
+                </label>
+                <label>
+                    Quantity: <input type="number" data-bind="$quantity" style="width: 60px;">
+                </label>
+                <label>
+                    Tax Rate: <input type="number" data-bind="$taxRate" step="0.01" style="width: 80px;">
+                </label>
+                
+                <div class="output">
+                    <div>Subtotal: $<span data-text="$subtotal.toFixed(2)"></span></div>
+                    <div>Tax: $<span data-text="$tax.toFixed(2)"></span></div>
+                    <div><strong>Total: $<span data-text="$total.toFixed(2)"></span></strong></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Load Datastar from CDN -->
+    <script type="module">
+        import { load, apply } from 'https://cdn.jsdelivr.net/npm/@sudodevnull/datastar';
+        
+        // Make Datastar available globally for the inspector
+        window.Datastar = { load, apply };
+        
+        // Apply Datastar to the document
+        apply();
+    </script>
+    
+    <!-- Load the Inspector -->
+    <script src="datastar-inspector.js"></script>
+    
+    <!-- Initialize the Inspector -->
+    <script>
+        // Wait for Datastar to be ready
+        setTimeout(() => {
+            DatastarInspector.init({
+                position: 'right',      // 'right', 'left', or 'bottom'
+                width: '400px',         // Width of the inspector panel
+                theme: 'dark',          // 'dark' or 'light'
+                startMinimized: false,  // Start with panel minimized
+                hotkey: 'Alt+Shift+D'   // Keyboard shortcut to toggle
+            });
+        }, 100);
+    </script>
+</body>
+</html>
