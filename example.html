@@ -108,10 +108,10 @@
     <div class="section">
         <h2>Counter Example</h2>
         <div data-signals="{count: 0, step: 1}">
-            <button data-on-click="$count = $count + $step">Increment</button>
-            <button data-on-click="$count = $count - $step">Decrement</button>
-            <button data-on-click="$count = 0">Reset</button>
-            <input type="number" data-bind="$step" placeholder="Step">
+            <button data-on:click="$count = $count + $step">Increment</button>
+            <button data-on:click="$count = $count - $step">Decrement</button>
+            <button data-on:click="$count = 0">Reset</button>
+            <input type="number" data-bind:step placeholder="Step">
             <div class="output">
                 Count: <span data-text="$count"></span> (Step: <span data-text="$step"></span>)
             </div>
@@ -121,11 +121,11 @@
     <div class="section">
         <h2>User Profile</h2>
         <div data-signals="{user: {name: '', email: '', age: 25, premium: false}}">
-            <input placeholder="Name" data-bind="$user.name">
-            <input placeholder="Email" data-bind="$user.email" type="email">
-            <input type="number" placeholder="Age" data-bind="$user.age">
+            <input placeholder="Name" data-bind="user.name">
+            <input placeholder="Email" data-bind="user.email" type="email">
+            <input type="number" placeholder="Age" data-bind="user.age">
             <label>
-                <input type="checkbox" data-bind="$user.premium">
+                <input type="checkbox" data-bind="user.premium">
                 Premium Member
             </label>
             <div class="output">
@@ -141,30 +141,30 @@
         <h2>Dynamic Todo List</h2>
         <div data-signals="{todos: [], newTodo: '', filter: 'all'}">
             <div>
-                <input placeholder="New todo..." data-bind="$newTodo" 
-                       data-on-keydown.enter="if($newTodo.trim()) { $todos.push({id: Date.now(), text: $newTodo, done: false}); $newTodo = '' }">
-                <button data-on-click="if($newTodo.trim()) { $todos.push({id: Date.now(), text: $newTodo, done: false}); $newTodo = '' }">
+                <input placeholder="New todo..." data-bind:newTodo
+                       data-on:keydown__enter="if($newTodo.trim()) { $todos.push({id: Date.now(), text: $newTodo, done: false}); $newTodo = '' }">
+                <button data-on:click="if($newTodo.trim()) { $todos.push({id: Date.now(), text: $newTodo, done: false}); $newTodo = '' }">
                     Add Todo
                 </button>
-                <button data-on-click="$todos = $todos.filter(t => !t.done)">Clear Completed</button>
-                <button data-on-click="$todos = []">Clear All</button>
+                <button data-on:click="$todos = $todos.filter(t => !t.done)">Clear Completed</button>
+                <button data-on:click="$todos = []">Clear All</button>
             </div>
-            
+
             <div style="margin: 10px 0;">
                 <label>
-                    <input type="radio" name="filter" data-on-click="$filter = 'all'" checked>
+                    <input type="radio" name="filter" data-on:click="$filter = 'all'" checked>
                     All (<span data-text="$todos.length"></span>)
                 </label>
                 <label>
-                    <input type="radio" name="filter" data-on-click="$filter = 'active'">
+                    <input type="radio" name="filter" data-on:click="$filter = 'active'">
                     Active (<span data-text="$todos.filter(t => !t.done).length"></span>)
                 </label>
                 <label>
-                    <input type="radio" name="filter" data-on-click="$filter = 'completed'">
+                    <input type="radio" name="filter" data-on:click="$filter = 'completed'">
                     Completed (<span data-text="$todos.filter(t => t.done).length"></span>)
                 </label>
             </div>
-            
+
             <div class="output">
                 <div data-text="`Showing ${$filter} todos`"></div>
             </div>
@@ -175,20 +175,20 @@
         <h2>Computed Values</h2>
         <div data-signals="{price: 100, quantity: 1, taxRate: 0.08}">
             <div data-computed="{
-                subtotal: $price * $quantity,
-                tax: $price * $quantity * $taxRate,
-                total: $price * $quantity * (1 + $taxRate)
+                subtotal: () => $price * $quantity,
+                tax: () => $price * $quantity * $taxRate,
+                total: () => $price * $quantity * (1 + $taxRate)
             }">
                 <label>
-                    Price: $<input type="number" data-bind="$price" style="width: 100px;">
+                    Price: $<input type="number" data-bind:price style="width: 100px;">
                 </label>
                 <label>
-                    Quantity: <input type="number" data-bind="$quantity" style="width: 60px;">
+                    Quantity: <input type="number" data-bind:quantity style="width: 60px;">
                 </label>
                 <label>
-                    Tax Rate: <input type="number" data-bind="$taxRate" step="0.01" style="width: 80px;">
+                    Tax Rate: <input type="number" data-bind:taxRate step="0.01" style="width: 80px;">
                 </label>
-                
+
                 <div class="output">
                     <div>Subtotal: $<span data-text="$subtotal.toFixed(2)"></span></div>
                     <div>Tax: $<span data-text="$tax.toFixed(2)"></span></div>
@@ -200,22 +200,16 @@
 
     <!-- Load Datastar from CDN -->
     <script type="module">
-        import { load, apply } from 'https://cdn.jsdelivr.net/npm/@sudodevnull/datastar';
-        
-        // Make Datastar available globally for the inspector
-        window.Datastar = { load, apply };
-        
-        // Apply Datastar to the document
-        apply();
-    </script>
-    
-    <!-- Load the Inspector -->
-    <script src="datastar-inspector.js"></script>
-    
-    <!-- Initialize the Inspector -->
-    <script>
-        // Wait for Datastar to be ready
-        setTimeout(() => {
+        // Datastar v1.0.0-RC.7 auto-initializes when imported
+        import { root } from 'https://cdn.jsdelivr.net/gh/starfederation/datastar@v1.0.0-RC.7/bundles/datastar.js';
+
+        // Make Datastar root available globally for the inspector
+        window.Datastar = { root };
+
+        // Load the inspector after Datastar is ready
+        const script = document.createElement('script');
+        script.src = 'datastar-inspector.js';
+        script.onload = () => {
             DatastarInspector.init({
                 position: 'right',      // 'right', 'left', or 'bottom'
                 width: '400px',         // Width of the inspector panel
@@ -223,7 +217,8 @@
                 startMinimized: false,  // Start with panel minimized
                 hotkey: 'Alt+Shift+D'   // Keyboard shortcut to toggle
             });
-        }, 100);
+        };
+        document.body.appendChild(script);
     </script>
 </body>
 </html>

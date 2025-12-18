@@ -87,19 +87,18 @@
 
     <div class="card">
         <h2>📝 Usage Example</h2>
-        <pre><code>&lt;!-- Load Datastar --&gt;
-&lt;script type="module"&gt;
-    import { load, apply } from 'https://cdn.jsdelivr.net/npm/@sudodevnull/datastar';
-    window.Datastar = { load, apply };
-    apply();
-&lt;/script&gt;
+        <pre><code>&lt;script type="module"&gt;
+    // Datastar v1.0.0-RC.7 auto-initializes when imported
+    import { root } from 'https://cdn.jsdelivr.net/gh/starfederation/datastar@v1.0.0-RC.7/bundles/datastar.js';
 
-&lt;!-- Load Inspector from CDN --&gt;
-&lt;script src="https://cdn.jsdelivr.net/gh/YOUR_USERNAME/datastar-inspector@v1.0.0/datastar-inspector.min.js"&gt;&lt;/script&gt;
+    // Make Datastar root available globally for the inspector
+    window.Datastar = { root };
 
-&lt;!-- Initialize --&gt;
-&lt;script&gt;
-    DatastarInspector.init();
+    // Load and initialize the inspector
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/gh/YOUR_USERNAME/datastar-inspector@v1.0.0/datastar-inspector.min.js';
+    script.onload = () =&gt; DatastarInspector.init();
+    document.body.appendChild(script);
 &lt;/script&gt;</code></pre>
     </div>
 

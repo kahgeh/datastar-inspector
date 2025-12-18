@@ -1,37 +1,46 @@
 # Datastar Inspector
 
-Development tool for monitoring and debugging [Datastar](https://datastarjs.com) signals.
+Development tool for monitoring and debugging [Datastar](https://data-star.dev) signals.
 
-Written entirely by claude.
+Compatible with **Datastar v1.0.0-RC.7**.
 
-## Setup 
+Written entirely by Claude.
+
+## Setup
 
 ### Option 1: CDN (Recommended)
 
 **jsDelivr CDN:**
 ```html
-    <script type="module">
-        import { load, apply } from 'https://cdn.jsdelivr.net/gh/starfederation/datastar@main/bundles/datastar.js';
-        import 'https://kahgeh.github.io/datastar-inspector/datastar-inspector.min.js';       
-        // Make Datastar available globally for the inspector
-        window.Datastar = { load, apply };
-        apply();
-        DatastarInspector.init({
-                position: 'right',      // 'right', 'left', or 'bottom'
-                width: '400px',         // Width of the inspector panel
-                theme: 'dark',          // 'dark' or 'light'
-                startMinimized: false,  // Start with panel minimized
-                hotkey: 'Alt+Shift+D'   // Keyboard shortcut to toggle
-            });
+<script type="module">
+    // Datastar v1.0.0-RC.7 auto-initializes when imported
+    import { root } from 'https://cdn.jsdelivr.net/gh/starfederation/datastar@v1.0.0-RC.7/bundles/datastar.js';
 
-    </script>
+    // Make Datastar root available globally for the inspector
+    window.Datastar = { root };
+
+    // Load the inspector
+    const script = document.createElement('script');
+    script.src = 'https://kahgeh.github.io/datastar-inspector/datastar-inspector.min.js';
+    script.onload = () => {
+        DatastarInspector.init({
+            position: 'right',      // 'right', 'left', or 'bottom'
+            width: '400px',         // Width of the inspector panel
+            theme: 'dark',          // 'dark' or 'light'
+            startMinimized: false,  // Start with panel minimized
+            hotkey: 'Alt+Shift+D'   // Keyboard shortcut to toggle
+        });
+    };
+    document.body.appendChild(script);
+</script>
 ```
 
 ### Option 2: Download and Self-Host
 
 1. Download `datastar-inspector.js` or `datastar-inspector.min.js` from this repository
 2. Include it in your project
-3. Follow the same initialization steps as above
+3. Expose `window.Datastar.root` so the inspector can access signals
+4. Follow the same initialization steps as above
 
 
 ## Usage

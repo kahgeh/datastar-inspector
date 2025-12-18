@@ -47,24 +47,23 @@
             // Merge options with default config
             Object.assign(this.config, options);
 
-            // Wait for Datastar to be available
-            if (typeof Datastar === 'undefined' || !Datastar.load) {
-                console.error('Datastar not found. Make sure Datastar is loaded before initializing the inspector.');
-                console.log('Looking for Datastar at window.Datastar');
-                
+            // Wait for Datastar to be available (v1.0.0-RC.7 exposes 'root' instead of 'load')
+            if (typeof Datastar === 'undefined' || !Datastar.root) {
+                console.log('📊 Datastar Inspector: Waiting for Datastar.root to be available...');
+
                 // Try to find Datastar in different possible locations
                 const checkForDatastar = setInterval(() => {
-                    if (window.Datastar && window.Datastar.load) {
+                    if (window.Datastar && window.Datastar.root) {
                         clearInterval(checkForDatastar);
                         this.initializeInspector();
                     }
                 }, 100);
-                
+
                 // Give up after 5 seconds
                 setTimeout(() => {
                     clearInterval(checkForDatastar);
                     if (!this.isInitialized) {
-                        console.error('Failed to find Datastar after 5 seconds');
+                        console.error('📊 Datastar Inspector: Failed to find Datastar.root after 5 seconds. Make sure Datastar is loaded and window.Datastar.root is exposed.');
                     }
                 }, 5000);
             } else {
@@ -73,29 +72,27 @@
         },
 
         initializeInspector() {
-            // Create plugin to expose signals
-            Datastar.load({
-                type: 'watcher',
-                name: 'datastarInspector',
-                onGlobalInit: (ctx) => {
-                    this.rootSignals = ctx.root;
-                    console.log('📊 Datastar Inspector: Signals exposed');
-                    
-                    // Initial scan
-                    setTimeout(() => this.scanSignals(), 100);
-                }
-            });
+            // Access root signals directly from Datastar (v1.0.0-RC.7 API)
+            if (window.Datastar && window.Datastar.root) {
+                this.rootSignals = window.Datastar.root;
+                console.log('📊 Datastar Inspector: Signals exposed via Datastar.root');
+            } else {
+                console.warn('📊 Datastar Inspector: Datastar.root not available, signal scanning may be limited');
+            }
 
-            // Listen for signal changes
+            // Listen for signal changes (still supported in v1.0.0-RC.7)
             document.addEventListener('datastar-signal-patch', (event) => {
                 this.handleSignalPatch(event.detail);
             });
 
             // Create UI
             this.createUI();
-            
+
             // Set up hotkey
             this.setupHotkey();
+
+            // Initial scan
+            setTimeout(() => this.scanSignals(), 100);
 
             // Periodic scan for any missed changes
             setInterval(() => this.scanSignals(), 2000);
