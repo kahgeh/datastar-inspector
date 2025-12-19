@@ -33,9 +33,17 @@
 
         // Initialize the inspector
         init(options = {}) {
-            if (this.isInitialized) {
-                console.warn('Datastar Inspector is already initialized');
+            // Check if already initialized AND container still exists in DOM
+            if (this.isInitialized && this.container && document.body.contains(this.container)) {
+                // Already initialized and UI is present - nothing to do
                 return;
+            }
+
+            // If initialized but container was removed (e.g., page content replaced via SSE),
+            // reset state and re-initialize
+            if (this.isInitialized && (!this.container || !document.body.contains(this.container))) {
+                this.isInitialized = false;
+                this.container = null;
             }
 
             // Load saved position from localStorage
@@ -656,13 +664,15 @@
         },
 
         updateUI() {
-            if (!this.container) return;
-            
+            if (!this.container || !document.body.contains(this.container)) return;
+
             // Update signal count
-            document.getElementById('dsi-signal-count').textContent = `${this.signals.size} signals`;
-            
+            const signalCount = document.getElementById('dsi-signal-count');
+            if (signalCount) signalCount.textContent = `${this.signals.size} signals`;
+
             // Update last update time
-            document.getElementById('dsi-last-update').textContent = new Date().toLocaleTimeString();
+            const lastUpdate = document.getElementById('dsi-last-update');
+            if (lastUpdate) lastUpdate.textContent = new Date().toLocaleTimeString();
             
             // Update signal list
             this.updateSignalList();
@@ -673,7 +683,7 @@
 
         updateSignalList() {
             const container = document.getElementById('dsi-signal-list');
-            if (!container) return;
+            if (!container || !document.body.contains(container)) return;
             
             const filter = container.parentElement.querySelector('input')?.value.toLowerCase() || '';
             
@@ -721,7 +731,7 @@
 
         updateChangeLog() {
             const container = document.getElementById('dsi-change-log');
-            if (!container) return;
+            if (!container || !document.body.contains(container)) return;
             
             let html = '';
             this.changeLog.slice(0, 50).forEach(entry => {
